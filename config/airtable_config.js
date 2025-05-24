@@ -8,10 +8,10 @@
 // DEVELOPMENT CONFIGURATION
 const AIRTABLE_CONFIG = {
   // Replace with your actual Airtable base ID
-  BASE_ID: process.env.AIRTABLE_BASE_ID || 'appXXXXXXXXXXXXXX',
+  BASE_ID: process.env.AIRTABLE_BASE_ID || 'appZWj3wGRGuyH1jM',
   
   // Replace with your actual Airtable API key
-  API_KEY: process.env.AIRTABLE_API_KEY || 'keyXXXXXXXXXXXXXX',
+  API_KEY: process.env.AIRTABLE_API_KEY || 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9',
   
   // Table names (must match your Airtable base)
   TABLES: {
