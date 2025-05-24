@@ -3,90 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U INSPIRE Wall - Drop #003 | UNINSPIRED™</title>
+    <title>U INSPIRE Wall | UNINSPIRED™</title>
     
-    <!-- Meta Tags for SEO -->
-    <meta name="description" content="Anonymous stories become wearable art. Submit your breaking the cycle moment and become part of the U INSPIRE Wall community.">
+    <!-- Meta Tags -->
+    <meta name="description" content="Anonymous stories become wearable art. Submit your story and become part of the U INSPIRE Wall community.">
     <meta name="keywords" content="anonymous stories, emotional art, community healing, uninspired collective">
-    <meta name="author" content="UNINSPIRED™ Collective">
-    
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="U INSPIRE Wall - Breaking the Cycle">
-    <meta property="og:description" content="Anonymous stories become wearable art through time-limited drops">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://uninspiredcollective.com/u-inspire-wall">
-    <meta property="og:image" content="https://uninspiredcollective.com/assets/images/u-inspire-wall-preview.jpg">
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="U INSPIRE Wall - Breaking the Cycle">
-    <meta name="twitter:description" content="Anonymous stories become wearable art">
-    <meta name="twitter:image" content="https://uninspiredcollective.com/assets/images/u-inspire-wall-preview.jpg">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Koulen:wght@400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Stylesheet -->
     <link rel="stylesheet" href="assets/css/styles.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    
-    <!-- Configuration Files - UPDATED PATHS -->
-    <script src="config/airtable_config.js"></script>
-    <script src="config/shopify_config.js"></script>
 </head>
 <body>
-    <!-- DROP COUNTDOWN SECTION -->
+    <!-- Header Section -->
     <section class="countdown-section">
-        <div class="drop-badge" id="drop-badge">DROP #003 • BREAKING THE CYCLE</div>
-        <h1 class="countdown-title">U INSPIRE WALL</h1>
-        <p class="countdown-subtitle">Anonymous stories become wearable art</p>
-        <div class="countdown-timer" id="countdown">02:14:37:22</div>
-        <div class="countdown-cta">
-            <button class="cta-btn cta-primary" id="submit-thread-btn">SUBMIT YOUR THREAD</button>
-            <a href="https://uninspiredcollective.com/collections/capsule" class="cta-btn cta-secondary" id="shop-capsule-btn">SHOP CAPSULE</a>
+        <div class="drop-badge" id="drop-badge">LOADING...</div>
+        <h1 class="main-title">U INSPIRE WALL</h1>
+        <p class="subtitle">Anonymous stories become wearable art</p>
+        <div class="prompt-question" id="prompt-question">Loading current drop...</div>
+        
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-number" id="submission-count">0</div>
+                <div class="stat-label">Submissions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="spots-left">125</div>
+                <div class="stat-label">Spots Left</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="drop-status">LOADING</div>
+                <div class="stat-label">Status</div>
+            </div>
+        </div>
+        
+        <div class="cta-buttons">
+            <button class="btn btn-primary" id="submit-thread-btn">SHARE YOUR STORY</button>
+            <a href="#" class="btn btn-secondary" id="shop-capsule-btn">SHOP CAPSULE</a>
         </div>
     </section>
 
-    <!-- TICKER BAR -->
+    <!-- Ticker Bar -->
     <div class="ticker-container">
         <div class="ticker-content" id="ticker">
-            <div class="ticker-item">🔥 Drop closes in 2d 14h</div>
-            <div class="ticker-item">❤️ Top thread: "I stopped pretending to be okay"</div>
-            <div class="ticker-item">✨ <span id="submission-count">127</span>/125 submissions received</div>
-            <div class="ticker-item">😭 68% of threads are about healing</div>
-            <div class="ticker-item">🔥 Most reactions: "Finally said it out loud"</div>
-            <div class="ticker-item">❤️ Community strength: GROWING DAILY</div>
+            <div class="ticker-item">🔥 Loading live data...</div>
+            <div class="ticker-item">❤️ Community stories loading...</div>
+            <div class="ticker-item">✨ <span id="ticker-submission-count">0</span>/125 submissions</div>
         </div>
     </div>
 
-    <!-- ABOUT THE DROP -->
+    <!-- About Section -->
     <section class="about-drop">
         <div class="about-container">
             <div class="about-badge">ABOUT THIS DROP</div>
-            <h2 id="drop-theme">BREAKING THE CYCLE</h2>
-            <p id="drop-description">We're collecting the moments when everything changed. The day you stopped running. The choice that saved you. The truth you finally spoke out loud.</p>
+            <h2 id="drop-theme">Loading...</h2>
+            <p id="drop-description">Loading drop information...</p>
             <p><strong>This isn't therapy. This isn't advice. This is raw, unfiltered truth becoming art.</strong></p>
             
             <div class="collective-stats">
                 <div class="stat">
-                    <div class="stat-number" id="stories-count">127</div>
+                    <div class="stat-number" id="stories-count">0</div>
                     <div class="stat-label">stories shared</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number" id="spots-left">-2</div>
+                    <div class="stat-number" id="spots-remaining">125</div>
                     <div class="stat-label">spots left</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number" id="drop-status">LIVE</div>
+                    <div class="stat-number" id="status-display">LIVE</div>
                     <div class="stat-label">status</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- HOW TO PARTICIPATE -->
+    <!-- Participation Steps -->
     <section class="participation-steps">
         <div class="steps-container">
             <h3>BE PART OF THE COLLECTIVE</h3>
@@ -116,31 +108,31 @@
             
             <div class="main-cta">
                 <button class="submit-story-btn" id="main-submit-btn">
-                    <span class="btn-question" id="main-prompt">What's your breaking the cycle moment?</span>
+                    <span class="btn-question" id="main-prompt">Share your story</span>
                     <span class="btn-action">SHARE YOUR EXPERIENCE →</span>
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- U INSPIRE WALL -->
+    <!-- Interactive Wall -->
     <section class="wall-container">
-        <h2 class="wall-title" style="text-align: center; font-size: 28px; margin-bottom: 16px; color: #111;">Interactive U INSPIRE Wall</h2>
-        <p class="wall-subtitle" style="text-align: center; font-size: 16px; margin-bottom: 32px; color: #666; max-width: 600px; margin-left: auto; margin-right: auto;">
-            Each word you see is from a real anonymous story. Hover over any area to explore individual threads with the magnifying glass effect.
+        <h2 class="wall-title">Interactive U INSPIRE Wall</h2>
+        <p class="wall-subtitle">
+            Each word represents a real anonymous story. Hover over any area to explore individual threads.
         </p>
         
-        <svg class="wall-svg" viewBox="0 0 900 240" id="inspireSvg" style="width: 100%; height: 300px; background: #f7f5f0; cursor: crosshair; border-radius: 8px;">
+        <svg class="wall-svg" viewBox="0 0 900 240" id="inspireSvg">
             <!-- SVG content will be populated by JavaScript -->
         </svg>
 
-        <div class="interaction-hint" style="text-align: center; margin-top: 20px; padding: 16px; background: rgba(248, 255, 0, 0.1); border-radius: 8px; border: 1px solid #f8ff00; max-width: 600px; margin-left: auto; margin-right: auto;">
-            <h4 style="color: #111; margin-bottom: 8px; font-family: 'Koulen', sans-serif;">🔍 How to Explore</h4>
-            <p style="color: #666; font-size: 14px;">Hover your cursor over any part of the letters to see individual story threads with the magnifying glass. Each color represents a different emotion, and larger text means more community reactions.</p>
+        <div class="interaction-hint">
+            <h4>🔍 How to Explore</h4>
+            <p>Hover your cursor over any part of the letters to see individual story threads with the magnifying glass. Each color represents a different emotion.</p>
         </div>
     </section>
 
-    <!-- FEATURED THREADS SECTION -->
+    <!-- Featured Threads -->
     <section class="threads-section">
         <h2 class="section-title">FEATURED THREADS</h2>
         <p class="section-subtitle">Stories that resonated with our community</p>
@@ -150,7 +142,7 @@
         </div>
     </section>
 
-    <!-- SUBMISSION MODAL -->
+    <!-- Submission Modal -->
     <div class="modal-overlay" id="submissionModal">
         <div class="modal-content">
             <button class="close-modal">&times;</button>
@@ -163,7 +155,7 @@
                 <div class="form-group">
                     <label class="form-label">Your Story *</label>
                     <textarea class="form-input form-textarea" name="text_snippet" placeholder="Share your story..." required maxlength="500"></textarea>
-                    <small style="color: #666; font-size: 12px;">5-500 characters</small>
+                    <small>5-500 characters</small>
                 </div>
                 
                 <div class="form-group">
@@ -190,7 +182,7 @@
                 <div class="form-group">
                     <label class="form-label">Email (for notifications)</label>
                     <input type="email" class="form-input" name="email_for_drop" placeholder="your@email.com">
-                    <small style="color: #666; font-size: 12px;">Optional - only for drop notifications</small>
+                    <small>Optional - only for drop notifications</small>
                 </div>
                 
                 <button type="submit" class="submit-btn">SUBMIT YOUR THREAD</button>
@@ -212,146 +204,42 @@
         </div>
     </footer>
 
-    <!-- Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-    </script>
+    <!-- Configuration Scripts - CRITICAL: Load these first -->
+    <script src="config/airtable_config.js"></script>
+    <script src="config/shopify_config.js"></script>
 
-    <!-- Main Application Script - UPDATED PATH -->
+    <!-- Main Application Script -->
     <script src="assets/js/app.js"></script>
-    
+
     <!-- Initialize Application -->
     <script>
-        // Initialize the U INSPIRE Wall application
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if UI controller exists (from updated app.js)
+            console.log('🚀 Initializing U INSPIRE Wall...');
+            
+            // Check if components loaded
             if (typeof UIController !== 'undefined') {
+                console.log('✅ UIController found, initializing...');
                 window.ui = new UIController();
+            } else if (typeof UInspireApp !== 'undefined') {
+                console.log('✅ UInspireApp found, initializing...');
+                const app = new UInspireApp();
+                app.init();
+                window.app = app;
             } else {
-                console.warn('UIController not found, falling back to legacy app initialization');
-                // Fallback to existing app structure if needed
-                if (typeof UInspireApp !== 'undefined') {
-                    const app = new UInspireApp();
-                    app.init();
-                    window.app = app;
-                }
+                console.error('❌ No app controller found! Check your JavaScript files.');
+                // Show fallback message
+                document.getElementById('threads-container').innerHTML = '<div class="error-state">Unable to load application. Please check your configuration.</div>';
             }
+        });
+
+        // Debug helper
+        console.log('🔍 Debug Info:');
+        console.log('- AIRTABLE_CONFIG loaded:', typeof AIRTABLE_CONFIG !== 'undefined');
+        console.log('- airtableAPI loaded:', typeof airtableAPI !== 'undefined');
+        console.log('- App controllers available:', {
+            UIController: typeof UIController !== 'undefined',
+            UInspireApp: typeof UInspireApp !== 'undefined'
         });
     </script>
-    <!-- Add this script to your index.html temporarily, just before closing </body> tag -->
-<script>
-console.log('🔍 === U INSPIRE WALL DEBUG REPORT ===');
-
-// 1. Check if scripts loaded
-console.log('1. SCRIPT LOADING CHECK:');
-console.log('  - AIRTABLE_CONFIG loaded:', typeof AIRTABLE_CONFIG !== 'undefined');
-console.log('  - airtableAPI loaded:', typeof airtableAPI !== 'undefined');
-console.log('  - UInspireApp loaded:', typeof UInspireApp !== 'undefined');
-console.log('  - UIController loaded:', typeof UIController !== 'undefined');
-
-// 2. Check environment variables
-console.log('2. ENVIRONMENT VARIABLES:');
-console.log('  - Has process:', typeof process !== 'undefined');
-console.log('  - Has process.env:', typeof process !== 'undefined' && !!process.env);
-
-if (typeof AIRTABLE_CONFIG !== 'undefined') {
-    console.log('3. AIRTABLE CONFIG:');
-    console.log('  - Base ID:', AIRTABLE_CONFIG.BASE_ID);
-    console.log('  - API Key (first 20 chars):', AIRTABLE_CONFIG.API_KEY?.substring(0, 20) + '...');
-    console.log('  - Tables:', AIRTABLE_CONFIG.TABLES);
-} else {
-    console.log('❌ AIRTABLE_CONFIG not found - config file not loaded!');
-}
-
-if (typeof airtableAPI !== 'undefined') {
-    console.log('4. AIRTABLE API STATUS:');
-    console.log('  - Is Configured:', airtableAPI.isConfigured());
-    console.log('  - Base ID:', airtableAPI.baseId);
-    console.log('  - Endpoints:', airtableAPI.endpoints);
-    
-    // Test API call
-    console.log('5. TESTING API CONNECTION...');
-    airtableAPI.getCurrentDrop()
-        .then(drop => {
-            console.log('✅ SUCCESS - Drop loaded:', drop);
-            if (drop) {
-                console.log('  - Drop ID:', drop.id);
-                console.log('  - Status:', drop.drop_status);
-                console.log('  - Theme:', drop.theme);
-                console.log('  - Prompt:', drop.prompt_question);
-            }
-        })
-        .catch(error => {
-            console.error('❌ API ERROR:', error);
-            console.error('  - Error message:', error.message);
-            console.error('  - Error details:', error);
-        });
-        
-    // Test threads loading
-    console.log('6. TESTING THREADS LOADING...');
-    airtableAPI.getThreadsForDrop(2)
-        .then(threads => {
-            console.log('✅ THREADS LOADED:', threads.length, 'threads found');
-            if (threads.length > 0) {
-                console.log('  - Sample thread:', threads[0]);
-            } else {
-                console.log('  ⚠️ No threads found for drop 2');
-            }
-        })
-        .catch(error => {
-            console.error('❌ THREADS ERROR:', error);
-        });
-} else {
-    console.log('❌ airtableAPI not found!');
-}
-
-// 7. Check DOM elements
-console.log('7. DOM ELEMENTS CHECK:');
-const elements = [
-    'drop-badge',
-    'submission-count', 
-    'spots-left',
-    'drop-status',
-    'threads-container',
-    'submit-thread-btn'
-];
-
-elements.forEach(id => {
-    const element = document.getElementById(id);
-    console.log(`  - #${id}:`, element ? '✅ Found' : '❌ Missing');
-});
-
-// 8. Check for JavaScript errors
-console.log('8. ERROR MONITORING:');
-window.addEventListener('error', function(e) {
-    console.error('💥 JAVASCRIPT ERROR:', e.error);
-    console.error('  - File:', e.filename);
-    console.error('  - Line:', e.lineno);
-    console.error('  - Message:', e.message);
-});
-
-// 9. Network requests monitoring
-const originalFetch = window.fetch;
-window.fetch = function(...args) {
-    console.log('🌐 NETWORK REQUEST:', args[0]);
-    return originalFetch.apply(this, args)
-        .then(response => {
-            console.log('📡 RESPONSE:', args[0], response.status, response.ok ? 'OK' : 'ERROR');
-            return response;
-        })
-        .catch(error => {
-            console.error('🚫 NETWORK ERROR:', args[0], error);
-            throw error;
-        });
-};
-
-console.log('🔍 === DEBUG SETUP COMPLETE ===');
-console.log('Open browser dev tools and check the console output above');
-console.log('Look for ❌ errors and ⚠️ warnings to identify issues');
-</script>
 </body>
 </html>
