@@ -24,16 +24,16 @@ const EMOTION_COLORS = {
 
 // SAMPLE THREAD DATA (for when Airtable isn't configured)
 const SAMPLE_THREADS = [
-    { id: "001", message: "I stopped pretending to be okay and finally asked for help", emotion: "relief", thread_number: 1, reactions: { heart: 89, fire: 34, sparkles: 67 } },
-    { id: "002", message: "Finding strength in vulnerability instead of hiding behind walls", emotion: "empowerment", thread_number: 2, reactions: { heart: 72, fire: 28, sparkles: 45 } },
-    { id: "003", message: "Angry at everything because I was really angry at myself", emotion: "rage", thread_number: 3, reactions: { heart: 56, fire: 91, sparkles: 23 } },
-    { id: "004", message: "Learning to forgive myself first before expecting it from others", emotion: "empowerment", thread_number: 4, reactions: { heart: 88, fire: 42, sparkles: 61 } },
-    { id: "005", message: "Finally breathing again after years of holding my breath", emotion: "relief", thread_number: 5, reactions: { heart: 94, fire: 38, sparkles: 72 } },
-    { id: "006", message: "Some days you just need to cry and that's perfectly okay", emotion: "grief", thread_number: 6, reactions: { heart: 103, fire: 19, sparkles: 84 } },
-    { id: "007", message: "Love is worth fighting for even when everything feels broken", emotion: "love", thread_number: 7, reactions: { heart: 127, fire: 45, sparkles: 89 } },
-    { id: "008", message: "Every small step counts when you're climbing out of darkness", emotion: "hope", thread_number: 8, reactions: { heart: 76, fire: 52, sparkles: 94 } },
-    { id: "009", message: "The silence is deafening but I'm learning to sit with it", emotion: "grief", thread_number: 9, reactions: { heart: 67, fire: 31, sparkles: 48 } },
-    { id: "010", message: "I choose myself today even when it feels selfish", emotion: "empowerment", thread_number: 10, reactions: { heart: 98, fire: 73, sparkles: 56 } }
+    { id: "001", message: "I stopped pretending to be okay and finally asked for help", emotion: "relief", thread_number: 1, reactions: { heart: 89, fire: 34, sparkles: 67 }, created_at: "2025-05-23T10:30:00.000Z" },
+    { id: "002", message: "Finding strength in vulnerability instead of hiding behind walls", emotion: "empowerment", thread_number: 2, reactions: { heart: 72, fire: 28, sparkles: 45 }, created_at: "2025-05-23T09:15:00.000Z" },
+    { id: "003", message: "Angry at everything because I was really angry at myself", emotion: "rage", thread_number: 3, reactions: { heart: 56, fire: 91, sparkles: 23 }, created_at: "2025-05-23T08:45:00.000Z" },
+    { id: "004", message: "Learning to forgive myself first before expecting it from others", emotion: "empowerment", thread_number: 4, reactions: { heart: 88, fire: 42, sparkles: 61 }, created_at: "2025-05-23T07:20:00.000Z" },
+    { id: "005", message: "Finally breathing again after years of holding my breath", emotion: "relief", thread_number: 5, reactions: { heart: 94, fire: 38, sparkles: 72 }, created_at: "2025-05-23T06:30:00.000Z" },
+    { id: "006", message: "Some days you just need to cry and that's perfectly okay", emotion: "grief", thread_number: 6, reactions: { heart: 103, fire: 19, sparkles: 84 }, created_at: "2025-05-22T22:15:00.000Z" },
+    { id: "007", message: "Love is worth fighting for even when everything feels broken", emotion: "love", thread_number: 7, reactions: { heart: 127, fire: 45, sparkles: 89 }, created_at: "2025-05-22T21:00:00.000Z" },
+    { id: "008", message: "Every small step counts when you're climbing out of darkness", emotion: "hope", thread_number: 8, reactions: { heart: 76, fire: 52, sparkles: 94 }, created_at: "2025-05-22T19:45:00.000Z" },
+    { id: "009", message: "The silence is deafening but I'm learning to sit with it", emotion: "grief", thread_number: 9, reactions: { heart: 67, fire: 31, sparkles: 48 }, created_at: "2025-05-22T18:30:00.000Z" },
+    { id: "010", message: "I choose myself today even when it feels selfish", emotion: "empowerment", thread_number: 10, reactions: { heart: 98, fire: 73, sparkles: 56 }, created_at: "2025-05-22T17:15:00.000Z" }
 ];
 
 // APPLICATION INITIALIZATION
@@ -118,8 +118,8 @@ class UInspireApp {
 
     // Set up event listeners
     setupEventListeners() {
-        // Modal controls
-        const submitBtns = document.querySelectorAll('.submit-story-btn, .cta-primary');
+        // Modal controls - updated selectors
+        const submitBtns = document.querySelectorAll('.submit-story-btn, .btn-primary, #submit-thread-btn, #main-submit-btn');
         submitBtns.forEach(btn => {
             btn.addEventListener('click', () => this.openSubmissionModal());
         });
@@ -150,12 +150,6 @@ class UInspireApp {
             option.addEventListener('click', (e) => this.selectEmotion(e));
         });
 
-        // Notification signup
-        const notifyBtn = document.querySelector('.notify-btn');
-        if (notifyBtn) {
-            notifyBtn.addEventListener('click', () => this.signupForNotifications());
-        }
-
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -172,7 +166,7 @@ class UInspireApp {
             document.body.style.overflow = 'hidden';
             
             // Focus on message textarea
-            const textarea = modal.querySelector('textarea[name="message"]');
+            const textarea = modal.querySelector('textarea[name="text_snippet"]');
             if (textarea) {
                 setTimeout(() => textarea.focus(), 100);
             }
@@ -216,12 +210,13 @@ class UInspireApp {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
             
-            // Get form data
+            // Get form data - FIXED: using correct field name
             const formData = new FormData(event.target);
             const submission = {
-                message: formData.get('message').trim(),
+                message: formData.get('text_snippet').trim(), // Fixed field name
                 emotion: selectedEmotion || 'hope',
-                email: formData.get('email')?.trim() || '',
+                email: formData.get('email_for_drop')?.trim() || '',
+                name: formData.get('optional_name')?.trim() || 'Anonymous',
                 drop_id: currentDrop?.id || 'drop_003'
             };
 
@@ -277,6 +272,68 @@ class UInspireApp {
         return true;
     }
 
+    // Email validation
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Show success message
+    showSuccess(message) {
+        this.showNotification(message, 'success');
+    }
+
+    // Show error message
+    showError(message) {
+        this.showNotification(message, 'error');
+    }
+
+    // Show notification
+    showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingNotification = document.querySelector('.notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#3b82f6'};
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            font-weight: 500;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+        `;
+        notification.textContent = message;
+
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.body.appendChild(notification);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+
     // Reset form
     resetForm() {
         const form = document.getElementById('submissionForm');
@@ -298,11 +355,11 @@ class UInspireApp {
 
         console.log('Rendering wall with', threads.length, 'threads');
 
-        // Create the interactive wall (this is the working code from your preview)
+        // Create the interactive wall
         this.createInteractiveWall(svg);
     }
 
-    // Create interactive wall with magnifying glass - WORKING VERSION FROM YOUR PREVIEW
+    // Create interactive wall with magnifying glass
     createInteractiveWall(svg) {
         // Set up SVG viewBox for proper scaling
         svg.setAttribute('viewBox', '0 0 900 240');
@@ -315,7 +372,7 @@ class UInspireApp {
         // Create defs section for clip paths and effects
         const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
         
-        // Letter clip path for "U INSPIRE" - CORRECT COORDINATES FROM PREVIEW
+        // Letter clip path for "U INSPIRE"
         const letterClip = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
         letterClip.id = 'letterClip';
         letterClip.innerHTML = `
@@ -362,7 +419,7 @@ class UInspireApp {
         const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         textGroup.setAttribute('clip-path', 'url(#letterClip)');
 
-        // Generate text elements from threads - CORRECT COORDINATES FROM PREVIEW
+        // Generate text elements from threads
         let threadIndex = 0;
         for (let x = 50; x <= 880; x += 12) {
             let y = 50;
@@ -400,7 +457,7 @@ class UInspireApp {
 
         svg.appendChild(textGroup);
 
-        // Create hover zones - CORRECT COORDINATES FROM PREVIEW
+        // Create hover zones
         const hoverGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         let zoneId = 1;
         for (let zoneX = 40; zoneX <= 880; zoneX += 60) {
@@ -434,11 +491,11 @@ class UInspireApp {
         magnifyGroup.style.display = 'none';
         svg.appendChild(magnifyGroup);
 
-        // Add interactivity - WORKING CODE FROM PREVIEW
+        // Add interactivity
         this.setupInteractions(svg);
     }
 
-    // Setup interactions - WORKING VERSION FROM PREVIEW
+    // Setup interactions
     setupInteractions(svg) {
         let currentMousePos = { x: 0, y: 0 };
         let isHovering = false;
@@ -484,7 +541,7 @@ class UInspireApp {
         });
     }
 
-    // Update magnifying glass - WORKING VERSION FROM PREVIEW
+    // Update magnifying glass
     updateMagnifyingGlass(mousePos, target) {
         const magnifyGroup = document.getElementById('magnifyGroup');
         if (!magnifyGroup || !target.dataset) return;
@@ -500,20 +557,13 @@ class UInspireApp {
 
         // Create magnifying glass elements
         const elements = [
-            // Background
             `<circle cx="${mousePos.x}" cy="${mousePos.y}" r="75" fill="rgba(0,0,0,0.85)" clip-path="url(#magnifyMask)"/>`,
-            // Emotion ring
             `<circle cx="${mousePos.x}" cy="${mousePos.y}" r="60" fill="none" stroke="${EMOTION_COLORS[target.dataset.emotion] || '#8a8a8a'}" stroke-width="2" opacity="0.7" clip-path="url(#magnifyMask)"/>`,
-            // Word text
             `<text x="${mousePos.x}" y="${mousePos.y - 5}" text-anchor="middle" fill="${EMOTION_COLORS[target.dataset.emotion] || '#8a8a8a'}" font-size="16" font-family="'Koulen', sans-serif" font-weight="bold" clip-path="url(#magnifyMask)">${target.dataset.word || 'thread'}</text>`,
-            // Thread number
             `<text x="${mousePos.x}" y="${mousePos.y + 15}" text-anchor="middle" fill="white" font-size="11" font-family="'Koulen', sans-serif" clip-path="url(#magnifyMask)">#${target.dataset.threadId}</text>`,
-            // Emotion
             `<text x="${mousePos.x}" y="${mousePos.y + 30}" text-anchor="middle" fill="${EMOTION_COLORS[target.dataset.emotion] || '#8a8a8a'}" font-size="9" font-family="'Koulen', sans-serif" clip-path="url(#magnifyMask)">${target.dataset.emotion}</text>`,
-            // Outer rings
             `<circle cx="${mousePos.x}" cy="${mousePos.y}" r="85" fill="none" stroke="#ff360a" stroke-width="4"/>`,
             `<circle cx="${mousePos.x}" cy="${mousePos.y}" r="80" fill="none" stroke="#f8ff00" stroke-width="2"/>`,
-            // Handle
             `<line x1="${mousePos.x + 60}" y1="${mousePos.y + 60}" x2="${mousePos.x + 95}" y2="${mousePos.y + 95}" stroke="#ff360a" stroke-width="6" stroke-linecap="round"/>`
         ];
 
@@ -572,9 +622,9 @@ class UInspireApp {
         }
     }
 
-    // Render featured stories
+    // Render featured stories - COMPLETE FUNCTION
     renderFeaturedStories() {
-        const container = document.getElementById('featured-stories');
+        const container = document.getElementById('featured-stories-container');
         if (!container || !threads.length) return;
 
         // Get top 3 threads by reactions
@@ -626,30 +676,73 @@ class UInspireApp {
         }
     }
 
+    // Get total reactions for a thread
+    getTotalReactions(thread) {
+        const reactions = thread.reactions || {};
+        return Object.values(reactions).reduce((sum, count) => sum + (count || 0), 0);
+    }
+
+    // Get time ago string
+    getTimeAgo(dateString) {
+        if (!dateString) return 'recently';
+        
+        const now = new Date();
+        const date = new Date(dateString);
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        
+        return date.toLocaleDateString();
+    }
+
     // Update statistics
     updateStats() {
         const totalThreads = threads.length;
         const spotsLeft = Math.max(0, 150 - totalThreads);
         
         // Update submission count displays
-        const submissionCounts = document.querySelectorAll('#submission-count, #stories-count');
+        const submissionCounts = document.querySelectorAll('#submission-count, #stories-count, #ticker-submission-count');
         submissionCounts.forEach(el => {
             if (el) el.textContent = totalThreads;
         });
 
-        const spotsLeftElements = document.querySelectorAll('#spots-left');
+        const spotsLeftElements = document.querySelectorAll('#spots-left, #spots-remaining');
         spotsLeftElements.forEach(el => {
             if (el) el.textContent = spotsLeft;
         });
 
-        // Update next thread number
-        const nextThreadNumber = document.getElementById('next-thread-number');
-        if (nextThreadNumber) {
-            nextThreadNumber.textContent = String(totalThreads + 1).padStart(3, '0');
-        }
-
         // Update ticker with live stats
         this.updateTicker();
+    }
+
+    // Update ticker
+    updateTicker() {
+        const totalThreads = threads.length;
+        const spotsLeft = Math.max(0, 150 - totalThreads);
+        const totalReactions = threads.reduce((sum, thread) => sum + this.getTotalReactions(thread), 0);
+        
+        // Get top emotion
+        const emotionCounts = {};
+        threads.forEach(thread => {
+            emotionCounts[thread.emotion] = (emotionCounts[thread.emotion] || 0) + 1;
+        });
+        const topEmotion = Object.keys(emotionCounts).reduce((a, b) => 
+            emotionCounts[a] > emotionCounts[b] ? a : b, 'empowerment'
+        );
+
+        const tickerContent = document.getElementById('ticker');
+        if (tickerContent) {
+            tickerContent.innerHTML = `
+                <div class="ticker-item">🔥 ${totalThreads}/150 stories shared</div>
+                <div class="ticker-item">❤️ ${totalReactions} total reactions</div>
+                <div class="ticker-item">✨ Top emotion: ${topEmotion}</div>
+                <div class="ticker-item">🎯 ${spotsLeft} spots remaining</div>
+                <div class="ticker-item">💝 Breaking the Cycle theme</div>
+            `;
+        }
     }
 
     // Update countdown timer
@@ -657,7 +750,7 @@ class UInspireApp {
         const countdownElement = document.getElementById('countdown');
         if (!countdownElement) return;
 
-        const dropEndDate = currentDrop?.drop_close ? new Date(currentDrop.drop_close) : new Date('2025-05-26T23:59:59');
+        const dropEndDate = currentDrop?.est_close_date ? new Date(currentDrop.est_close_date) : new Date('2025-05-26T23:59:59');
         const now = new Date();
         const timeLeft = dropEndDate - now;
 
@@ -665,7 +758,41 @@ class UInspireApp {
             const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            countdownElement.textContent = 
-                `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0'
+            countdownElement.textContent = `${days}d ${hours}h ${minutes}m remaining`;
+        } else {
+            countdownElement.textContent = 'Drop ended';
+        }
+    }
+
+    // Start periodic updates
+    startPeriodicUpdates() {
+        // Update stats every 30 seconds
+        setInterval(() => {
+            this.updateStats();
+            this.updateCountdown();
+        }, 30000);
+
+        // Reload data every 5 minutes
+        setInterval(() => {
+            this.loadData();
+        }, 300000);
+    }
+}
+
+// Initialize the application
+window.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initializing U INSPIRE Wall...');
+    
+    // Wait for dependencies to load
+    setTimeout(() => {
+        if (typeof UInspireApp !== 'undefined') {
+            console.log('✅ UInspireApp found, initializing...');
+            const app = new UInspireApp();
+            app.init();
+            window.app = app;
+        } else {
+            console.error('❌ UInspireApp not found!');
+        }
+    }, 100);
+});
