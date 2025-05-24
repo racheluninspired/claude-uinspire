@@ -1,105 +1,221 @@
 /**
- * Airtable Configuration for U INSPIRE Wall
- * Updated for Netlify Environment Variables and Actual Table Structure
+ * Secure Airtable Configuration - Client Side
+ * Calls Netlify Functions instead of direct API access
  */
 
-// Environment variable detection for Netlify
-const isNetlify = typeof process !== 'undefined' && process.env;
+// Secure client-side API that calls Netlify functions
+class AirtableAPI {
+  constructor() {
+    this.apiEndpoint = '/.netlify/functions/airtable';
+    this.isConfigured = true; // Always true when using Netlify functions
+  }
 
-// DEVELOPMENT CONFIGURATION
-const AIRTABLE_CONFIG = {
-  // Use environment variables in production, fallback to development values
-  BASE_ID: isNetlify ? process.env.AIRTABLE_BASE_ID : 'appZWj3wGRGuyH1jM',
-  API_KEY: isNetlify ? process.env.AIRTABLE_API_KEY : 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9',
-  
-  // Table names (must match your actual Airtable base exactly)
-  TABLES: {
-    THREADS: 'ThreadsGrid view 3',  // ✅ Matches your CSV structure
-    DROPS: 'DropsGrid view 1',      // ✅ Matches your CSV structure  
-    COMMENTS: 'CommentsGrid view 1' // ✅ Matches your CSV structure
-  },
-  
-  // Field mappings based on your actual CSV structure
-  FIELDS: {
-    THREADS: {
-      RECORD_ID: 'Record ID',
-      SUBMISSION_ID: 'submission_id',
-      TIMESTAMP: 'timestamp',
-      TEXT_SNIPPET: 'text_snippet',
-      EMOTION_TAG: 'emotion_tag',
-      UPVOTE_COUNT: 'upvote_count',
-      DROP_ID: 'drop_id',
-      WALL_STATUS: 'wall_status',
-      OPTIONAL_NAME: 'optional_name',
-      EMAIL_FOR_DROP: 'email_for_drop',
-      INTERESTED_IN_CAPSULE: 'interested_in_capsule',
-      SOCIAL_HANDLE: 'social_handle',
-      COMMENT_TEXT: 'comment_text',
-      COMMENT_FLAG: 'comment_flag',
-      DRAFT_CONTENT: 'Draft Content',
-      EMAIL_OPT_IN: 'email_opt_in',
-      EXPANDED_STORY: 'expanded_story',
-      CREATED: 'Created',
-      REACTIONS: 'reactions',
-      RELATE_COUNT: 'relate_count',
-      STRENGTH_COUNT: 'strength_count',
-      HOPE_COUNT: 'hope_count',
-      THREAD: 'Thread',
-      LIKE_COUNT: 'like_count',
-      SUPPORT_COUNT: 'support_count',
-      AI_PROMPT: 'ai_prompt',
-      AI_BACKGROUND_URL: 'ai_background_URL',
-      IMAGE_STATUS: 'image_status',
-      LAST_MODIFIED: 'Last Modified'
-    },
-    DROPS: {
-      DROP_ID: 'drop_id',
-      DROP_STATUS: 'drop_status',
-      THEME: 'theme',
-      PROMPT_QUESTION: 'prompt_question',
-      CAPSULE_URL: 'capsule_url',
-      WALL_IMAGE_URL: 'wall_image_url',
-      TOP_EMOTIONS: 'top_emotions',
-      FEATURED_THREAD_ID: 'featured_thread_id',
-      DROP_SUMMARY: 'drop_summary',
-      LAUNCH_DATE: 'launch_date',
-      EST_CLOSE_DATE: 'est_close_date',
-      COMMENTS: 'Comments',
-      THREADS: 'Threads'
-    },
-    COMMENTS: {
-      THREAD_ID: 'thread_id',
-      SUBMISSION_LINK: 'submission_link',
-      MESSAGE: 'message',
-      TIMESTAMP: 'timestamp',
-      WALL_STATUS: 'wall_status',
-      REACTIONS: 'reactions',
-      AUTHOR_NAME: 'author_name',
-      AUTHOR_AVATAR: 'author_avatar',
-      LIKE_COUNT: 'like_count',
-      DROP_ID: 'drop_id'
+  // Check if API is configured
+  isConfigured() {
+    return true; // Always configured when using server-side functions
+  }
+
+  // Get current live drop
+  async getCurrentDrop() {
+    try {
+      const response = await fetch(this.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ path: 'getCurrentDrop' })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching current drop:', error);
+      return this.getMockDrop();
     }
-  },
-  
-  // API endpoints
-  get ENDPOINTS() {
+  }
+
+  // Get threads for specific drop
+  async getThreads(dropId = 'drop_003') {
+    try {
+      const response = await fetch(this.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          path: 'getThreads',
+          dropId: dropId 
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const threads = await response.json();
+      console.log(`Loaded ${threads.length} threads from Airtable via Netlify`);
+      return threads;
+    } catch (error) {
+      console.error('Error fetching threads:', error);
+      return this.getMockThreads();
+    }
+  }
+
+  // Submit new thread
+  async submitThread(threadData) {
+    try {
+      const response = await fetch(this.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          path: 'submitThread',
+          threadData: threadData
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log('Thread submitted successfully:', result);
+      return result;
+    } catch (error) {
+      console.error('Error submitting thread:', error);
+      throw error;
+    }
+  }
+
+  // Update reaction counts
+  async updateReactions(threadId, reactionType) {
+    try {
+      const response = await fetch(this.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          path: 'updateReactions',
+          threadId: threadId,
+          reactionType: reactionType
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating reactions:', error);
+      // Don't throw - reactions are non-critical
+    }
+  }
+
+  // Mock data fallbacks (same as before)
+  getMockDrop() {
     return {
-      THREADS: `https://api.airtable.com/v0/${this.BASE_ID}/${encodeURIComponent(this.TABLES.THREADS)}`,
-      DROPS: `https://api.airtable.com/v0/${this.BASE_ID}/${encodeURIComponent(this.TABLES.DROPS)}`,
-      COMMENTS: `https://api.airtable.com/v0/${this.BASE_ID}/${encodeURIComponent(this.TABLES.COMMENTS)}`
-    };
-  },
-  
-  // Request headers
-  get HEADERS() {
-    return {
-      'Authorization': `Bearer ${this.API_KEY}`,
-      'Content-Type': 'application/json'
+      id: 'drop_003',
+      title: 'Breaking the Cycle',
+      theme_summary: 'Share the moment when you broke free from something that was holding you back',
+      drop_status: 'live',
+      launch_date: '2025-05-20',
+      est_close_date: '2025-05-26'
     };
   }
-};
 
-// EMOTION CONFIGURATION (matches your existing structure)
+  getMockThreads() {
+    return [
+      { 
+        id: "001", 
+        message: "I stopped pretending to be okay and finally asked for help", 
+        emotion: "relief", 
+        thread_number: 1, 
+        reactions: { heart: 89, fire: 34, sparkles: 67 },
+        created_at: "2025-05-23T10:30:00.000Z"
+      },
+      { 
+        id: "002", 
+        message: "Finding strength in vulnerability instead of hiding behind walls", 
+        emotion: "empowerment", 
+        thread_number: 2, 
+        reactions: { heart: 72, fire: 28, sparkles: 45 },
+        created_at: "2025-05-23T09:15:00.000Z"
+      },
+      { 
+        id: "003", 
+        message: "Angry at everything because I was really angry at myself", 
+        emotion: "rage", 
+        thread_number: 3, 
+        reactions: { heart: 56, fire: 91, sparkles: 23 },
+        created_at: "2025-05-23T08:45:00.000Z"
+      },
+      { 
+        id: "004", 
+        message: "Learning to forgive myself first before expecting it from others", 
+        emotion: "empowerment", 
+        thread_number: 4, 
+        reactions: { heart: 88, fire: 42, sparkles: 61 },
+        created_at: "2025-05-23T07:20:00.000Z"
+      },
+      { 
+        id: "005", 
+        message: "Finally breathing again after years of holding my breath", 
+        emotion: "relief", 
+        thread_number: 5, 
+        reactions: { heart: 94, fire: 38, sparkles: 72 },
+        created_at: "2025-05-23T06:30:00.000Z"
+      },
+      { 
+        id: "006", 
+        message: "Some days you just need to cry and that's perfectly okay", 
+        emotion: "grief", 
+        thread_number: 6, 
+        reactions: { heart: 103, fire: 19, sparkles: 84 },
+        created_at: "2025-05-22T22:15:00.000Z"
+      },
+      { 
+        id: "007", 
+        message: "Love is worth fighting for even when everything feels broken", 
+        emotion: "love", 
+        thread_number: 7, 
+        reactions: { heart: 127, fire: 45, sparkles: 89 },
+        created_at: "2025-05-22T21:00:00.000Z"
+      },
+      { 
+        id: "008", 
+        message: "Every small step counts when you're climbing out of darkness", 
+        emotion: "hope", 
+        thread_number: 8, 
+        reactions: { heart: 76, fire: 52, sparkles: 94 },
+        created_at: "2025-05-22T19:45:00.000Z"
+      },
+      { 
+        id: "009", 
+        message: "The silence is deafening but I'm learning to sit with it", 
+        emotion: "grief", 
+        thread_number: 9, 
+        reactions: { heart: 67, fire: 31, sparkles: 48 },
+        created_at: "2025-05-22T18:30:00.000Z"
+      },
+      { 
+        id: "010", 
+        message: "I choose myself today even when it feels selfish", 
+        emotion: "empowerment", 
+        thread_number: 10, 
+        reactions: { heart: 98, fire: 73, sparkles: 56 },
+        created_at: "2025-05-22T17:15:00.000Z"
+      }
+    ];
+  }
+}
+
+// EMOTION COLOR MAP (matches your brand)
 const EMOTION_COLORS = {
   love: '#ff2eff',
   grief: '#8a8a8a',
@@ -115,171 +231,8 @@ const EMOTION_COLORS = {
   resentment: '#8B4513'
 };
 
-const EMOTION_LABELS = {
-  love: 'Love',
-  grief: 'Grief', 
-  rage: 'Rage',
-  relief: 'Relief',
-  shame: 'Shame',
-  joy: 'Joy',
-  fear: 'Fear',
-  calm: 'Calm',
-  empowerment: 'Empowerment',
-  hope: 'Hope',
-  nostalgia: 'Nostalgia',
-  resentment: 'Resentment'
-};
+// Initialize API instance
+window.airtableAPI = new AirtableAPI();
+window.EMOTION_COLORS = EMOTION_COLORS;
 
-// Enhanced Airtable API Class
-class AirtableAPI {
-  constructor() {
-    this.baseId = AIRTABLE_CONFIG.BASE_ID;
-    this.apiKey = AIRTABLE_CONFIG.API_KEY;
-    this.headers = AIRTABLE_CONFIG.HEADERS;
-    this.endpoints = AIRTABLE_CONFIG.ENDPOINTS;
-    this.fields = AIRTABLE_CONFIG.FIELDS;
-  }
-
-  // Validate configuration
-  isConfigured() {
-    return this.baseId && this.apiKey && 
-           this.baseId !== 'appZWj3wGRGuyH1jM' &&
-           this.apiKey !== 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9';
-  }
-
-  // Get current live drop
-  async getCurrentDrop() {
-    if (!this.isConfigured()) {
-      console.warn('Airtable not configured, using mock data');
-      return this.getMockDrop();
-    }
-
-    try {
-      const filterFormula = `{${this.fields.DROPS.DROP_STATUS}}='live'`;
-      const url = `${this.endpoints.DROPS}?filterByFormula=${encodeURIComponent(filterFormula)}&maxRecords=1&sort[0][field]=${this.fields.DROPS.DROP_ID}&sort[0][direction]=desc`;
-      
-      const response = await fetch(url, {
-        headers: this.headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.records.length > 0) {
-        const record = data.records[0];
-        return {
-          airtable_id: record.id,
-          id: record.fields[this.fields.DROPS.DROP_ID],
-          drop_status: record.fields[this.fields.DROPS.DROP_STATUS],
-          theme: record.fields[this.fields.DROPS.THEME],
-          prompt_question: record.fields[this.fields.DROPS.PROMPT_QUESTION],
-          capsule_url: record.fields[this.fields.DROPS.CAPSULE_URL],
-          wall_image_url: record.fields[this.fields.DROPS.WALL_IMAGE_URL],
-          top_emotions: record.fields[this.fields.DROPS.TOP_EMOTIONS],
-          featured_thread_id: record.fields[this.fields.DROPS.FEATURED_THREAD_ID],
-          drop_summary: record.fields[this.fields.DROPS.DROP_SUMMARY],
-          launch_date: record.fields[this.fields.DROPS.LAUNCH_DATE],
-          est_close_date: record.fields[this.fields.DROPS.EST_CLOSE_DATE]
-        };
-      }
-      
-      return null;
-    } catch (error) {
-      console.error('Error fetching current drop:', error);
-      return this.getMockDrop();
-    }
-  }
-
-  // Get threads for a specific drop
-  async getThreadsForDrop(dropId) {
-    if (!this.isConfigured()) {
-      console.warn('Airtable not configured, using mock data');
-      return this.getMockThreads();
-    }
-
-    try {
-      const filterFormula = `AND({${this.fields.THREADS.DROP_ID}}=${dropId},{${this.fields.THREADS.WALL_STATUS}}='Accepted')`;
-      const url = `${this.endpoints.THREADS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=${this.fields.THREADS.UPVOTE_COUNT}&sort[0][direction]=desc&maxRecords=125`;
-      
-      const response = await fetch(url, {
-        headers: this.headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      return data.records.map(record => ({
-        airtable_id: record.id,
-        id: record.fields[this.fields.THREADS.SUBMISSION_ID] || record.id,
-        submission_id: record.fields[this.fields.THREADS.SUBMISSION_ID],
-        timestamp: record.fields[this.fields.THREADS.TIMESTAMP],
-        text_snippet: record.fields[this.fields.THREADS.TEXT_SNIPPET],
-        emotion_tag: record.fields[this.fields.THREADS.EMOTION_TAG],
-        upvote_count: record.fields[this.fields.THREADS.UPVOTE_COUNT] || 0,
-        drop_id: record.fields[this.fields.THREADS.DROP_ID],
-        wall_status: record.fields[this.fields.THREADS.WALL_STATUS],
-        optional_name: record.fields[this.fields.THREADS.OPTIONAL_NAME],
-        email_for_drop: record.fields[this.fields.THREADS.EMAIL_FOR_DROP],
-        expanded_story: record.fields[this.fields.THREADS.EXPANDED_STORY],
-        reactions: record.fields[this.fields.THREADS.REACTIONS],
-        like_count: record.fields[this.fields.THREADS.LIKE_COUNT],
-        created: record.fields[this.fields.THREADS.CREATED]
-      }));
-    } catch (error) {
-      console.error('Error fetching threads:', error);
-      return this.getMockThreads();
-    }
-  }
-
-  // Get comments for a specific thread
-  async getCommentsForThread(threadId) {
-    if (!this.isConfigured()) {
-      return [];
-    }
-
-    try {
-      const filterFormula = `AND({${this.fields.COMMENTS.SUBMISSION_LINK}}='${threadId}',{${this.fields.COMMENTS.WALL_STATUS}}='Accepted')`;
-      const url = `${this.endpoints.COMMENTS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=${this.fields.COMMENTS.TIMESTAMP}&sort[0][direction]=asc`;
-      
-      const response = await fetch(url, {
-        headers: this.headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      return data.records.map(record => ({
-        id: record.id,
-        thread_id: record.fields[this.fields.COMMENTS.THREAD_ID],
-        submission_link: record.fields[this.fields.COMMENTS.SUBMISSION_LINK],
-        message: record.fields[this.fields.COMMENTS.MESSAGE],
-        timestamp: record.fields[this.fields.COMMENTS.TIMESTAMP],
-        wall_status: record.fields[this.fields.COMMENTS.WALL_STATUS],
-        author_name: record.fields[this.fields.COMMENTS.AUTHOR_NAME] || 'Anonymous',
-        like_count: record.fields[this.fields.COMMENTS.LIKE_COUNT] || 0,
-        drop_id: record.fields[this.fields.COMMENTS.DROP_ID]
-      }));
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      return [];
-    }
-  }
-
-  // Submit new thread
-  async submitThread(threadData) {
-    if (!this.isConfigured()) {
-      throw new Error('Airtable not configured');
-    }
-
-    const submission = {
-      fields: {
-        [this.fields.THREADS.SUBMISSION
+console.log('✅ Secure Airtable API configured via Netlify Functions');
