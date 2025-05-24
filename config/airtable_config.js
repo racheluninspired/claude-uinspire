@@ -73,8 +73,8 @@ class AirtableAPI {
 
   // Validate configuration
   isConfigured() {
-    return this.baseId && this.baseId !== 'appXXXXXXXXXXXXXX' &&
-           this.apiKey && this.apiKey !== 'keyXXXXXXXXXXXXXX';
+    return this.baseId && this.baseId !== 'appZWj3wGRGuyH1jM' &&
+           this.apiKey && this.apiKey !== 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9';
   }
 
   // Get all threads for current drop
