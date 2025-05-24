@@ -1,29 +1,92 @@
 /**
  * Airtable Configuration for U INSPIRE Wall
- * 
- * IMPORTANT: Never commit real API keys to version control
- * Use environment variables in production
+ * Updated for Netlify Environment Variables and Actual Table Structure
  */
+
+// Environment variable detection for Netlify
+const isNetlify = typeof process !== 'undefined' && process.env;
 
 // DEVELOPMENT CONFIGURATION
 const AIRTABLE_CONFIG = {
-  // Replace with your actual Airtable base ID
-  BASE_ID: process.env.AIRTABLE_BASE_ID || 'appZWj3wGRGuyH1jM',
+  // Use environment variables in production, fallback to development values
+  BASE_ID: isNetlify ? process.env.AIRTABLE_BASE_ID : 'appZWj3wGRGuyH1jM',
+  API_KEY: isNetlify ? process.env.AIRTABLE_API_KEY : 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9',
   
-  // Replace with your actual Airtable API key
-  API_KEY: process.env.AIRTABLE_API_KEY || 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9',
-  
-  // Table names (must match your Airtable base)
+  // Table names (must match your actual Airtable base exactly)
   TABLES: {
-    THREADS: 'Threads',
-    DROPS: 'Drops'
+    THREADS: 'ThreadsGrid view 3',  // ✅ Matches your CSV structure
+    DROPS: 'DropsGrid view 1',      // ✅ Matches your CSV structure  
+    COMMENTS: 'CommentsGrid view 1' // ✅ Matches your CSV structure
+  },
+  
+  // Field mappings based on your actual CSV structure
+  FIELDS: {
+    THREADS: {
+      RECORD_ID: 'Record ID',
+      SUBMISSION_ID: 'submission_id',
+      TIMESTAMP: 'timestamp',
+      TEXT_SNIPPET: 'text_snippet',
+      EMOTION_TAG: 'emotion_tag',
+      UPVOTE_COUNT: 'upvote_count',
+      DROP_ID: 'drop_id',
+      WALL_STATUS: 'wall_status',
+      OPTIONAL_NAME: 'optional_name',
+      EMAIL_FOR_DROP: 'email_for_drop',
+      INTERESTED_IN_CAPSULE: 'interested_in_capsule',
+      SOCIAL_HANDLE: 'social_handle',
+      COMMENT_TEXT: 'comment_text',
+      COMMENT_FLAG: 'comment_flag',
+      DRAFT_CONTENT: 'Draft Content',
+      EMAIL_OPT_IN: 'email_opt_in',
+      EXPANDED_STORY: 'expanded_story',
+      CREATED: 'Created',
+      REACTIONS: 'reactions',
+      RELATE_COUNT: 'relate_count',
+      STRENGTH_COUNT: 'strength_count',
+      HOPE_COUNT: 'hope_count',
+      THREAD: 'Thread',
+      LIKE_COUNT: 'like_count',
+      SUPPORT_COUNT: 'support_count',
+      AI_PROMPT: 'ai_prompt',
+      AI_BACKGROUND_URL: 'ai_background_URL',
+      IMAGE_STATUS: 'image_status',
+      LAST_MODIFIED: 'Last Modified'
+    },
+    DROPS: {
+      DROP_ID: 'drop_id',
+      DROP_STATUS: 'drop_status',
+      THEME: 'theme',
+      PROMPT_QUESTION: 'prompt_question',
+      CAPSULE_URL: 'capsule_url',
+      WALL_IMAGE_URL: 'wall_image_url',
+      TOP_EMOTIONS: 'top_emotions',
+      FEATURED_THREAD_ID: 'featured_thread_id',
+      DROP_SUMMARY: 'drop_summary',
+      LAUNCH_DATE: 'launch_date',
+      EST_CLOSE_DATE: 'est_close_date',
+      COMMENTS: 'Comments',
+      THREADS: 'Threads'
+    },
+    COMMENTS: {
+      THREAD_ID: 'thread_id',
+      SUBMISSION_LINK: 'submission_link',
+      MESSAGE: 'message',
+      TIMESTAMP: 'timestamp',
+      WALL_STATUS: 'wall_status',
+      REACTIONS: 'reactions',
+      AUTHOR_NAME: 'author_name',
+      AUTHOR_AVATAR: 'author_avatar',
+      LIKE_COUNT: 'like_count',
+      DROP_ID: 'drop_id'
+    }
   },
   
   // API endpoints
   get ENDPOINTS() {
     return {
-      THREADS: `https://api.airtable.com/v0/${this.BASE_ID}/${this.TABLES.THREADS}`,
-      DROPS: `https://api.airtable.com/v0/${this.BASE_ID}/${this.TABLES.DROPS}`
+      THREADS: `https://api.airtable.com/v0/${this.BASE_ID}/${encodeURIComponent(this.TABLES.THREADS)}`,
+      DROPS: `https://api.airtable.com/v0/${this.BASE_ID}/${encodeURIComponent(this.TABLES.DROPS)}`,
+      COMMENTS: `https://api.airtable.com/v0/${this.BASE_ID}/${encodeURIComponent(this.TABLES.COMMENTS)}`
     };
   },
   
@@ -36,7 +99,7 @@ const AIRTABLE_CONFIG = {
   }
 };
 
-// EMOTION CONFIGURATION
+// EMOTION CONFIGURATION (matches your existing structure)
 const EMOTION_COLORS = {
   love: '#ff2eff',
   grief: '#8a8a8a',
@@ -47,7 +110,9 @@ const EMOTION_COLORS = {
   fear: '#a6a6a6',
   calm: '#c8b8a6',
   empowerment: '#ff008c',
-  hope: '#b8ff10'
+  hope: '#b8ff10',
+  nostalgia: '#c8b8a6',
+  resentment: '#8B4513'
 };
 
 const EMOTION_LABELS = {
@@ -60,353 +125,161 @@ const EMOTION_LABELS = {
   fear: 'Fear',
   calm: 'Calm',
   empowerment: 'Empowerment',
-  hope: 'Hope'
+  hope: 'Hope',
+  nostalgia: 'Nostalgia',
+  resentment: 'Resentment'
 };
 
-// API HELPER FUNCTIONS
+// Enhanced Airtable API Class
 class AirtableAPI {
   constructor() {
     this.baseId = AIRTABLE_CONFIG.BASE_ID;
     this.apiKey = AIRTABLE_CONFIG.API_KEY;
     this.headers = AIRTABLE_CONFIG.HEADERS;
+    this.endpoints = AIRTABLE_CONFIG.ENDPOINTS;
+    this.fields = AIRTABLE_CONFIG.FIELDS;
   }
 
   // Validate configuration
   isConfigured() {
-    return this.baseId && this.baseId !== 'appZWj3wGRGuyH1jM' &&
-           this.apiKey && this.apiKey !== 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9';
+    return this.baseId && this.apiKey && 
+           this.baseId !== 'appZWj3wGRGuyH1jM' &&
+           this.apiKey !== 'patvhuOYlQMobVvaX.833baeed2d1adc99382b343e61b0fde48a02f81fd4f987d5fdc33f53d7bbc7f9';
   }
 
-  // Get all threads for current drop
-  async getThreads(dropId = 'drop_003', status = 'Accepted') {
+  // Get current live drop
+  async getCurrentDrop() {
     if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
+      console.warn('Airtable not configured, using mock data');
+      return this.getMockDrop();
     }
 
-    const filterFormula = `AND({status}='${status}',{drop_id}='${dropId}')`;
-    const url = `${AIRTABLE_CONFIG.ENDPOINTS.THREADS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=created_at&sort[0][direction]=desc`;
-    
     try {
+      const filterFormula = `{${this.fields.DROPS.DROP_STATUS}}='live'`;
+      const url = `${this.endpoints.DROPS}?filterByFormula=${encodeURIComponent(filterFormula)}&maxRecords=1&sort[0][field]=${this.fields.DROPS.DROP_ID}&sort[0][direction]=desc`;
+      
       const response = await fetch(url, {
         headers: this.headers
       });
 
       if (!response.ok) {
-        throw new Error(`Airtable API error: ${response.status} ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
+      
+      if (data.records.length > 0) {
+        const record = data.records[0];
+        return {
+          airtable_id: record.id,
+          id: record.fields[this.fields.DROPS.DROP_ID],
+          drop_status: record.fields[this.fields.DROPS.DROP_STATUS],
+          theme: record.fields[this.fields.DROPS.THEME],
+          prompt_question: record.fields[this.fields.DROPS.PROMPT_QUESTION],
+          capsule_url: record.fields[this.fields.DROPS.CAPSULE_URL],
+          wall_image_url: record.fields[this.fields.DROPS.WALL_IMAGE_URL],
+          top_emotions: record.fields[this.fields.DROPS.TOP_EMOTIONS],
+          featured_thread_id: record.fields[this.fields.DROPS.FEATURED_THREAD_ID],
+          drop_summary: record.fields[this.fields.DROPS.DROP_SUMMARY],
+          launch_date: record.fields[this.fields.DROPS.LAUNCH_DATE],
+          est_close_date: record.fields[this.fields.DROPS.EST_CLOSE_DATE]
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error fetching current drop:', error);
+      return this.getMockDrop();
+    }
+  }
+
+  // Get threads for a specific drop
+  async getThreadsForDrop(dropId) {
+    if (!this.isConfigured()) {
+      console.warn('Airtable not configured, using mock data');
+      return this.getMockThreads();
+    }
+
+    try {
+      const filterFormula = `AND({${this.fields.THREADS.DROP_ID}}=${dropId},{${this.fields.THREADS.WALL_STATUS}}='Accepted')`;
+      const url = `${this.endpoints.THREADS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=${this.fields.THREADS.UPVOTE_COUNT}&sort[0][direction]=desc&maxRecords=125`;
+      
+      const response = await fetch(url, {
+        headers: this.headers
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
       return data.records.map(record => ({
-        id: record.id,
-        ...record.fields,
-        reactions: this.parseReactions(record.fields.reactions)
+        airtable_id: record.id,
+        id: record.fields[this.fields.THREADS.SUBMISSION_ID] || record.id,
+        submission_id: record.fields[this.fields.THREADS.SUBMISSION_ID],
+        timestamp: record.fields[this.fields.THREADS.TIMESTAMP],
+        text_snippet: record.fields[this.fields.THREADS.TEXT_SNIPPET],
+        emotion_tag: record.fields[this.fields.THREADS.EMOTION_TAG],
+        upvote_count: record.fields[this.fields.THREADS.UPVOTE_COUNT] || 0,
+        drop_id: record.fields[this.fields.THREADS.DROP_ID],
+        wall_status: record.fields[this.fields.THREADS.WALL_STATUS],
+        optional_name: record.fields[this.fields.THREADS.OPTIONAL_NAME],
+        email_for_drop: record.fields[this.fields.THREADS.EMAIL_FOR_DROP],
+        expanded_story: record.fields[this.fields.THREADS.EXPANDED_STORY],
+        reactions: record.fields[this.fields.THREADS.REACTIONS],
+        like_count: record.fields[this.fields.THREADS.LIKE_COUNT],
+        created: record.fields[this.fields.THREADS.CREATED]
       }));
     } catch (error) {
       console.error('Error fetching threads:', error);
-      throw error;
+      return this.getMockThreads();
+    }
+  }
+
+  // Get comments for a specific thread
+  async getCommentsForThread(threadId) {
+    if (!this.isConfigured()) {
+      return [];
+    }
+
+    try {
+      const filterFormula = `AND({${this.fields.COMMENTS.SUBMISSION_LINK}}='${threadId}',{${this.fields.COMMENTS.WALL_STATUS}}='Accepted')`;
+      const url = `${this.endpoints.COMMENTS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=${this.fields.COMMENTS.TIMESTAMP}&sort[0][direction]=asc`;
+      
+      const response = await fetch(url, {
+        headers: this.headers
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      return data.records.map(record => ({
+        id: record.id,
+        thread_id: record.fields[this.fields.COMMENTS.THREAD_ID],
+        submission_link: record.fields[this.fields.COMMENTS.SUBMISSION_LINK],
+        message: record.fields[this.fields.COMMENTS.MESSAGE],
+        timestamp: record.fields[this.fields.COMMENTS.TIMESTAMP],
+        wall_status: record.fields[this.fields.COMMENTS.WALL_STATUS],
+        author_name: record.fields[this.fields.COMMENTS.AUTHOR_NAME] || 'Anonymous',
+        like_count: record.fields[this.fields.COMMENTS.LIKE_COUNT] || 0,
+        drop_id: record.fields[this.fields.COMMENTS.DROP_ID]
+      }));
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      return [];
     }
   }
 
   // Submit new thread
   async submitThread(threadData) {
     if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
+      throw new Error('Airtable not configured');
     }
 
     const submission = {
       fields: {
-        message: threadData.message,
-        emotion: threadData.emotion || 'hope',
-        status: 'Pending',
-        drop_id: threadData.drop_id || 'drop_003',
-        email: threadData.email,
-        created_at: new Date().toISOString(),
-        reactions: JSON.stringify({
-          heart: 0,
-          fire: 0,
-          sparkles: 0,
-          sad: 0,
-          rage: 0
-        })
-      }
-    };
-
-    try {
-      const response = await fetch(AIRTABLE_CONFIG.ENDPOINTS.THREADS, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify(submission)
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to submit thread: ${response.status} ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error submitting thread:', error);
-      throw error;
-    }
-  }
-
-  // Update thread reactions
-  async updateReactions(threadId, reactionType) {
-    if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
-    }
-
-    try {
-      // First get current reactions
-      const currentThread = await this.getThreadById(threadId);
-      if (!currentThread) {
-        throw new Error('Thread not found');
-      }
-
-      const reactions = currentThread.reactions || {};
-      reactions[reactionType] = (reactions[reactionType] || 0) + 1;
-
-      const update = {
-        fields: {
-          reactions: JSON.stringify(reactions)
-        }
-      };
-
-      const response = await fetch(`${AIRTABLE_CONFIG.ENDPOINTS.THREADS}/${threadId}`, {
-        method: 'PATCH',
-        headers: this.headers,
-        body: JSON.stringify(update)
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update reactions: ${response.status} ${response.statusText}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error updating reactions:', error);
-      throw error;
-    }
-  }
-
-  // Get single thread by ID
-  async getThreadById(threadId) {
-    if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
-    }
-
-    try {
-      const response = await fetch(`${AIRTABLE_CONFIG.ENDPOINTS.THREADS}/${threadId}`, {
-        headers: this.headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to get thread: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return {
-        id: data.id,
-        ...data.fields,
-        reactions: this.parseReactions(data.fields.reactions)
-      };
-    } catch (error) {
-      console.error('Error getting thread:', error);
-      throw error;
-    }
-  }
-
-  // Get current drop information
-  async getCurrentDrop() {
-    if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
-    }
-
-    const filterFormula = `{archived}=FALSE()`;
-    const url = `${AIRTABLE_CONFIG.ENDPOINTS.DROPS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=drop_close&sort[0][direction]=desc&maxRecords=1`;
-    
-    try {
-      const response = await fetch(url, {
-        headers: this.headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to get current drop: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data.records.length > 0 ? {
-        id: data.records[0].id,
-        ...data.records[0].fields
-      } : null;
-    } catch (error) {
-      console.error('Error getting current drop:', error);
-      throw error;
-    }
-  }
-
-  // Get featured threads for capsule
-  async getFeaturedThreads(dropId = 'drop_003') {
-    if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
-    }
-
-    const filterFormula = `AND({status}='Accepted',{drop_id}='${dropId}',{capsule_feature}=TRUE())`;
-    const url = `${AIRTABLE_CONFIG.ENDPOINTS.THREADS}?filterByFormula=${encodeURIComponent(filterFormula)}&sort[0][field]=created_at&sort[0][direction]=desc`;
-    
-    try {
-      const response = await fetch(url, {
-        headers: this.headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to get featured threads: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data.records.map(record => ({
-        id: record.id,
-        ...record.fields,
-        reactions: this.parseReactions(record.fields.reactions)
-      }));
-    } catch (error) {
-      console.error('Error getting featured threads:', error);
-      throw error;
-    }
-  }
-
-  // Utility function to parse reactions JSON
-  parseReactions(reactionsString) {
-    try {
-      return reactionsString ? JSON.parse(reactionsString) : {
-        heart: 0,
-        fire: 0,
-        sparkles: 0,
-        sad: 0,
-        rage: 0
-      };
-    } catch (error) {
-      console.error('Error parsing reactions:', error);
-      return {
-        heart: 0,
-        fire: 0,
-        sparkles: 0,
-        sad: 0,
-        rage: 0
-      };
-    }
-  }
-
-  // Get thread statistics
-  async getDropStatistics(dropId = 'drop_003') {
-    if (!this.isConfigured()) {
-      throw new Error('Airtable not configured. Please update config/airtable-config.js');
-    }
-
-    try {
-      const threads = await this.getThreads(dropId);
-      const totalReactions = threads.reduce((sum, thread) => {
-        const reactions = thread.reactions || {};
-        return sum + Object.values(reactions).reduce((a, b) => a + b, 0);
-      }, 0);
-
-      const emotionCounts = threads.reduce((counts, thread) => {
-        counts[thread.emotion] = (counts[thread.emotion] || 0) + 1;
-        return counts;
-      }, {});
-
-      const topEmotion = Object.keys(emotionCounts).reduce((a, b) => 
-        emotionCounts[a] > emotionCounts[b] ? a : b, 'hope');
-
-      return {
-        totalThreads: threads.length,
-        totalReactions,
-        emotionCounts,
-        topEmotion,
-        spotsRemaining: Math.max(0, 150 - threads.length),
-        featuredCount: threads.filter(t => t.capsule_feature).length
-      };
-    } catch (error) {
-      console.error('Error getting statistics:', error);
-      throw error;
-    }
-  }
-}
-
-// RATE LIMITING
-class RateLimiter {
-  constructor(requestsPerSecond = 5) {
-    this.requestsPerSecond = requestsPerSecond;
-    this.requests = [];
-  }
-
-  async throttle() {
-    const now = Date.now();
-    this.requests = this.requests.filter(time => now - time < 1000);
-    
-    if (this.requests.length >= this.requestsPerSecond) {
-      const oldestRequest = Math.min(...this.requests);
-      const waitTime = 1000 - (now - oldestRequest);
-      await new Promise(resolve => setTimeout(resolve, waitTime));
-    }
-    
-    this.requests.push(now);
-  }
-}
-
-// ERROR HANDLING
-class AirtableError extends Error {
-  constructor(message, status, response) {
-    super(message);
-    this.name = 'AirtableError';
-    this.status = status;
-    this.response = response;
-  }
-}
-
-// VALIDATION HELPERS
-const VALIDATORS = {
-  emotion: (emotion) => Object.keys(EMOTION_COLORS).includes(emotion),
-  
-  message: (message) => {
-    if (!message || typeof message !== 'string') return false;
-    if (message.length < 5) return false;
-    if (message.length > 500) return false;
-    return true;
-  },
-  
-  email: (email) => {
-    if (!email) return true; // Email is optional
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  },
-  
-  dropId: (dropId) => {
-    if (!dropId) return false;
-    return /^drop_\d{3}$/.test(dropId);
-  }
-};
-
-// Create singleton instance
-const airtableAPI = new AirtableAPI();
-const rateLimiter = new RateLimiter();
-
-// Export for use in other files
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    AIRTABLE_CONFIG,
-    EMOTION_COLORS,
-    EMOTION_LABELS,
-    AirtableAPI,
-    airtableAPI,
-    rateLimiter,
-    VALIDATORS,
-    AirtableError
-  };
-} else {
-  // Browser environment
-  window.AIRTABLE_CONFIG = AIRTABLE_CONFIG;
-  window.EMOTION_COLORS = EMOTION_COLORS;
-  window.EMOTION_LABELS = EMOTION_LABELS;
-  window.airtableAPI = airtableAPI;
-  window.VALIDATORS = VALIDATORS;
-}
+        [this.fields.THREADS.SUBMISSION
