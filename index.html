@@ -18,38 +18,40 @@
 <body>
     <!-- Header Section -->
     <section class="countdown-section">
-        <div class="drop-badge" id="drop-badge">LOADING...</div>
+        <div class="drop-badge" id="drop-badge">LIVE DROP</div>
         <h1 class="main-title">U INSPIRE WALL</h1>
         <p class="subtitle">Anonymous stories become wearable art</p>
-        <div class="prompt-question" id="prompt-question">Loading current drop...</div>
+        <div class="prompt-question" id="prompt-question">Share the moment when you broke free from something that was holding you back</div>
         
         <div class="stats-bar">
             <div class="stat">
-                <div class="stat-number" id="submission-count">0</div>
+                <div class="stat-number" id="submission-count">12</div>
                 <div class="stat-label">Submissions</div>
             </div>
             <div class="stat">
-                <div class="stat-number" id="spots-left">125</div>
+                <div class="stat-number" id="spots-left">138</div>
                 <div class="stat-label">Spots Left</div>
             </div>
             <div class="stat">
-                <div class="stat-number" id="drop-status">LOADING</div>
+                <div class="stat-number" id="drop-status">LIVE</div>
                 <div class="stat-label">Status</div>
             </div>
         </div>
         
         <div class="cta-buttons">
             <button class="btn btn-primary" id="submit-thread-btn">SHARE YOUR STORY</button>
-            <a href="#" class="btn btn-secondary" id="shop-capsule-btn">SHOP CAPSULE</a>
+            <a href="#featured-stories" class="btn btn-secondary">VIEW STORIES</a>
         </div>
     </section>
 
     <!-- Ticker Bar -->
     <div class="ticker-container">
         <div class="ticker-content" id="ticker">
-            <div class="ticker-item">🔥 Loading live data...</div>
-            <div class="ticker-item">❤️ Community stories loading...</div>
-            <div class="ticker-item">✨ <span id="ticker-submission-count">0</span>/125 submissions</div>
+            <div class="ticker-item">🔥 <span id="ticker-submission-count">12</span>/150 stories shared</div>
+            <div class="ticker-item">❤️ 1,347 total reactions</div>
+            <div class="ticker-item">✨ Top emotion: empowerment</div>
+            <div class="ticker-item">🎯 138 spots remaining</div>
+            <div class="ticker-item">💝 Breaking the Cycle theme</div>
         </div>
     </div>
 
@@ -57,17 +59,17 @@
     <section class="about-drop">
         <div class="about-container">
             <div class="about-badge">ABOUT THIS DROP</div>
-            <h2 id="drop-theme">Loading...</h2>
-            <p id="drop-description">Loading drop information...</p>
+            <h2 id="drop-theme">Breaking the Cycle</h2>
+            <p>We're collecting the moments when everything changed. The day you stopped running. The choice that saved you. The truth you finally spoke out loud.</p>
             <p><strong>This isn't therapy. This isn't advice. This is raw, unfiltered truth becoming art.</strong></p>
             
             <div class="collective-stats">
                 <div class="stat">
-                    <div class="stat-number" id="stories-count">0</div>
+                    <div class="stat-number" id="stories-count">12</div>
                     <div class="stat-label">stories shared</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number" id="spots-remaining">125</div>
+                    <div class="stat-number" id="spots-remaining">138</div>
                     <div class="stat-label">spots left</div>
                 </div>
                 <div class="stat">
@@ -108,7 +110,7 @@
             
             <div class="main-cta">
                 <button class="submit-story-btn" id="main-submit-btn">
-                    <span class="btn-question" id="main-prompt">Share your story</span>
+                    <span class="btn-question">Share your story of breaking free</span>
                     <span class="btn-action">SHARE YOUR EXPERIENCE →</span>
                 </button>
             </div>
@@ -133,12 +135,12 @@
     </section>
 
     <!-- Featured Threads -->
-    <section class="threads-section">
-        <h2 class="section-title">FEATURED THREADS</h2>
+    <section class="threads-section" id="featured-stories">
+        <h2 class="section-title">THIS HIT HARD</h2>
         <p class="section-subtitle">Stories that resonated with our community</p>
         
-        <div id="threads-container">
-            <div class="loading-state">Loading threads...</div>
+        <div class="story-cards" id="featured-stories-container">
+            <div class="loading-state">Loading featured stories...</div>
         </div>
     </section>
 
@@ -148,7 +150,7 @@
             <button class="close-modal">&times;</button>
             <div class="modal-header">
                 <h3>Share Your Story</h3>
-                <p id="submission-prompt">Anonymous submission</p>
+                <p id="submission-prompt">Anonymous submission for Breaking the Cycle</p>
             </div>
             
             <form id="submissionForm">
@@ -170,7 +172,7 @@
                         <div class="emotion-option" data-emotion="fear">Fear</div>
                         <div class="emotion-option" data-emotion="hope">Hope</div>
                         <div class="emotion-option" data-emotion="empowerment">Empowerment</div>
-                        <div class="emotion-option" data-emotion="nostalgia">Nostalgia</div>
+                        <div class="emotion-option" data-emotion="calm">Calm</div>
                     </div>
                 </div>
                 
@@ -204,7 +206,7 @@
         </div>
     </footer>
 
-    <!-- Configuration Scripts - CRITICAL: Load these first -->
+    <!-- Configuration Scripts -->
     <script src="config/airtable_config.js"></script>
     <script src="config/shopify_config.js"></script>
 
@@ -216,30 +218,27 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Initializing U INSPIRE Wall...');
             
-            // Check if components loaded
-            if (typeof UIController !== 'undefined') {
-                console.log('✅ UIController found, initializing...');
-                window.ui = new UIController();
-            } else if (typeof UInspireApp !== 'undefined') {
+            // Initialize app
+            if (typeof UInspireApp !== 'undefined') {
                 console.log('✅ UInspireApp found, initializing...');
                 const app = new UInspireApp();
                 app.init();
                 window.app = app;
             } else {
-                console.error('❌ No app controller found! Check your JavaScript files.');
+                console.error('❌ UInspireApp not found! Check your JavaScript files.');
                 // Show fallback message
-                document.getElementById('threads-container').innerHTML = '<div class="error-state">Unable to load application. Please check your configuration.</div>';
+                const container = document.getElementById('featured-stories-container');
+                if (container) {
+                    container.innerHTML = '<div class="error-state">Unable to load application. Please check your configuration.</div>';
+                }
             }
         });
 
         // Debug helper
         console.log('🔍 Debug Info:');
-        console.log('- AIRTABLE_CONFIG loaded:', typeof AIRTABLE_CONFIG !== 'undefined');
         console.log('- airtableAPI loaded:', typeof airtableAPI !== 'undefined');
-        console.log('- App controllers available:', {
-            UIController: typeof UIController !== 'undefined',
-            UInspireApp: typeof UInspireApp !== 'undefined'
-        });
+        console.log('- EMOTION_COLORS loaded:', typeof EMOTION_COLORS !== 'undefined');
+        console.log('- UInspireApp available:', typeof UInspireApp !== 'undefined');
     </script>
 </body>
 </html>
