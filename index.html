@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U INSPIRE Wall - Drop #003 | UNINSPIRED™</title>
+    
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Anonymous stories become wearable art. Submit your breaking the cycle moment and become part of the U INSPIRE Wall community.">
+    <meta name="keywords" content="anonymous stories, emotional art, community healing, uninspired collective">
+    <meta name="author" content="UNINSPIRED™ Collective">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="U INSPIRE Wall - Breaking the Cycle">
+    <meta property="og:description" content="Anonymous stories become wearable art through time-limited drops">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://uninspiredcollective.com/u-inspire-wall">
+    <meta property="og:image" content="https://uninspiredcollective.com/assets/images/u-inspire-wall-preview.jpg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="U INSPIRE Wall - Breaking the Cycle">
+    <meta name="twitter:description" content="Anonymous stories become wearable art">
+    <meta name="twitter:image" content="https://uninspiredcollective.com/assets/images/u-inspire-wall-preview.jpg">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Koulen:wght@400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    
+    <!-- Configuration Files -->
+    <script src="config/airtable-config.js"></script>
+    <script src="config/shopify-config.js"></script>
+</head>
+<body>
+    <!-- DROP COUNTDOWN SECTION -->
+    <section class="countdown-section">
+        <div class="drop-badge">DROP #003 • BREAKING THE CYCLE</div>
+        <h1 class="countdown-title">U INSPIRE WALL</h1>
+        <p class="countdown-subtitle">Anonymous stories become wearable art</p>
+        <div class="countdown-timer" id="countdown">02:14:37:22</div>
+        <div class="countdown-cta">
+            <button class="cta-btn cta-primary">SUBMIT YOUR THREAD</button>
+            <a href="https://uninspiredcollective.com/collections/capsule" class="cta-btn cta-secondary">SHOP CAPSULE</a>
+        </div>
+    </section>
+
+    <!-- TICKER BAR -->
+    <div class="ticker-container">
+        <div class="ticker-content" id="ticker">
+            <div class="ticker-item">🔥 Drop closes in 2d 14h</div>
+            <div class="ticker-item">❤️ Top thread: "I stopped pretending to be okay"</div>
+            <div class="ticker-item">✨ <span id="submission-count">127</span>/150 submissions received</div>
+            <div class="ticker-item">😭 68% of threads are about healing</div>
+            <div class="ticker-item">🔥 Most reactions: "Finally said it out loud"</div>
+            <div class="ticker-item">❤️ Community strength: GROWING DAILY</div>
+        </div>
+    </div>
+
+    <!-- ABOUT THE DROP -->
+    <section class="about-drop">
+        <div class="about-container">
+            <div class="about-badge">ABOUT THIS DROP</div>
+            <h2>BREAKING THE CYCLE</h2>
+            <p>We're collecting the moments when everything changed. The day you stopped running. The choice that saved you. The truth you finally spoke out loud.</p>
+            <p><strong>This isn't therapy. This isn't advice. This is raw, unfiltered truth becoming art.</strong></p>
+            
+            <div class="collective-stats">
+                <div class="stat">
+                    <div class="stat-number" id="stories-count">127</div>
+                    <div class="stat-label">stories shared</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="spots-left">23</div>
+                    <div class="stat-label">spots left</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="days-remaining">3</div>
+                    <div class="stat-label">days remaining</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW TO PARTICIPATE -->
+    <section class="participation-steps">
+        <div class="steps-container">
+            <h3>BE PART OF THE COLLECTIVE</h3>
+            
+            <div class="step-cards">
+                <div class="step-card">
+                    <div class="step-icon">01</div>
+                    <h4>SHARE</h4>
+                    <p>Submit your anonymous story and get your thread number</p>
+                    <div class="step-visual">📝</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">02</div>
+                    <h4>ENGAGE</h4>
+                    <p>React to others' stories. Feel less alone in your experience</p>
+                    <div class="step-visual">❤️</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">03</div>
+                    <h4>CONNECT</h4>
+                    <p>Get notified when the capsule drops with your collective stories</p>
+                    <div class="step-visual">👕</div>
+                </div>
+            </div>
+            
+            <div class="main-cta">
+                <button class="submit-story-btn">
+                    <span class="btn-question">What's your breaking the cycle moment?</span>
+                    <span class="btn-action">SHARE YOUR EXPERIENCE →</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- U INSPIRE WALL -->
+    <section class="wall-container">
+        <svg class="wall-svg" viewBox="0 0 400 600" id="inspireSvg">
+            <!-- SVG content will be populated by JavaScript -->
+        </svg>
+    </section>
+
+    <!-- THIS HIT HARD SECTION -->
+    <section class="hit-hard-section">
+        <h2 class="hit-hard-title">THIS HIT HARD</h2>
+        <p class="hit-hard-subtitle">Stories that stopped us scrolling. Featured in next month's capsule.</p>
+        
+        <!-- Story Cards (TikTok/IG Style) -->
+        <div class="story-cards" id="featured-stories">
+            <!-- Stories will be populated by JavaScript -->
+        </div>
+        
+        <div class="capsule-preview">
+            <div class="capsule-text">These stories will be featured on limited capsule pieces</div>
+            <button class="notify-btn">GET NOTIFIED WHEN CAPSULE DROPS</button>
+        </div>
+    </section>
+
+    <!-- SUBMISSION MODAL -->
+    <div class="modal-overlay" id="submissionModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <h3>Share Your Breaking the Cycle Moment</h3>
+                <p>Anonymous • Thread #<span id="next-thread-number">128</span></p>
+            </div>
+            
+            <form id="submissionForm">
+                <div class="form-group">
+                    <label class="form-label">Your Story *</label>
+                    <textarea class="form-input form-textarea" name="message" placeholder="The moment everything changed..." required maxlength="500"></textarea>
+                    <small style="color: #666; font-size: 12px;">5-500 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Emotion</label>
+                    <div class="emotion-selector">
+                        <div class="emotion-option" data-emotion="love" data-color="#ff2eff">Love</div>
+                        <div class="emotion-option" data-emotion="grief" data-color="#8a8a8a">Grief</div>
+                        <div class="emotion-option" data-emotion="rage" data-color="#ff360a">Rage</div>
+                        <div class="emotion-option" data-emotion="relief" data-color="#00ffe0">Relief</div>
+                        <div class="emotion-option" data-emotion="shame" data-color="#d4d4d4">Shame</div>
+                        <div class="emotion-option" data-emotion="joy" data-color="#fffb00">Joy</div>
+                        <div class="emotion-option" data-emotion="fear" data-color="#a6a6a6">Fear</div>
+                        <div class="emotion-option" data-emotion="calm" data-color="#c8b8a6">Calm</div>
+                        <div class="emotion-option" data-emotion="empowerment" data-color="#ff008c">Empowerment</div>
+                        <div class="emotion-option" data-emotion="hope" data-color="#b8ff10">Hope</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email (for capsule notifications)</label>
+                    <input type="email" class="form-input" name="email" placeholder="your@email.com">
+                    <small style="color: #666; font-size: 12px;">Optional - only for drop notifications</small>
+                </div>
+                
+                <button type="submit" class="submit-btn">SUBMIT YOUR THREAD</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: #111; color: white; padding: 40px 20px; text-align: center;">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h4 style="margin-bottom: 16px; color: #f8ff00;">UNINSPIRED™ COLLECTIVE</h4>
+            <p style="margin-bottom: 16px; opacity: 0.8;">Turning pain into purpose, one thread at a time.</p>
+            <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 20px;">
+                <a href="https://uninspiredcollective.com" style="color: white; text-decoration: none;">Shop</a>
+                <a href="https://uninspiredcollective.com/pages/about" style="color: white; text-decoration: none;">About</a>
+                <a href="https://uninspiredcollective.com/pages/contact" style="color: white; text-decoration: none;">Contact</a>
+            </div>
+            <p style="font-size: 12px; opacity: 0.6;">© 2025 UNINSPIRED™ Collective. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Analytics -->
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+
+    <!-- Main Application Script -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
