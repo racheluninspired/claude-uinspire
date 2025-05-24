@@ -32,7 +32,23 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     position: relative;
 }
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
 
+.notification-success { background: #4ade80; }
+.notification-error { background: #ef4444; }
+.notification-info { background: #3b82f6; }
 .drop-badge {
     background: #ff2eff;
     color: white;
