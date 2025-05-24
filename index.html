@@ -242,5 +242,116 @@
             }
         });
     </script>
+    <!-- Add this script to your index.html temporarily, just before closing </body> tag -->
+<script>
+console.log('🔍 === U INSPIRE WALL DEBUG REPORT ===');
+
+// 1. Check if scripts loaded
+console.log('1. SCRIPT LOADING CHECK:');
+console.log('  - AIRTABLE_CONFIG loaded:', typeof AIRTABLE_CONFIG !== 'undefined');
+console.log('  - airtableAPI loaded:', typeof airtableAPI !== 'undefined');
+console.log('  - UInspireApp loaded:', typeof UInspireApp !== 'undefined');
+console.log('  - UIController loaded:', typeof UIController !== 'undefined');
+
+// 2. Check environment variables
+console.log('2. ENVIRONMENT VARIABLES:');
+console.log('  - Has process:', typeof process !== 'undefined');
+console.log('  - Has process.env:', typeof process !== 'undefined' && !!process.env);
+
+if (typeof AIRTABLE_CONFIG !== 'undefined') {
+    console.log('3. AIRTABLE CONFIG:');
+    console.log('  - Base ID:', AIRTABLE_CONFIG.BASE_ID);
+    console.log('  - API Key (first 20 chars):', AIRTABLE_CONFIG.API_KEY?.substring(0, 20) + '...');
+    console.log('  - Tables:', AIRTABLE_CONFIG.TABLES);
+} else {
+    console.log('❌ AIRTABLE_CONFIG not found - config file not loaded!');
+}
+
+if (typeof airtableAPI !== 'undefined') {
+    console.log('4. AIRTABLE API STATUS:');
+    console.log('  - Is Configured:', airtableAPI.isConfigured());
+    console.log('  - Base ID:', airtableAPI.baseId);
+    console.log('  - Endpoints:', airtableAPI.endpoints);
+    
+    // Test API call
+    console.log('5. TESTING API CONNECTION...');
+    airtableAPI.getCurrentDrop()
+        .then(drop => {
+            console.log('✅ SUCCESS - Drop loaded:', drop);
+            if (drop) {
+                console.log('  - Drop ID:', drop.id);
+                console.log('  - Status:', drop.drop_status);
+                console.log('  - Theme:', drop.theme);
+                console.log('  - Prompt:', drop.prompt_question);
+            }
+        })
+        .catch(error => {
+            console.error('❌ API ERROR:', error);
+            console.error('  - Error message:', error.message);
+            console.error('  - Error details:', error);
+        });
+        
+    // Test threads loading
+    console.log('6. TESTING THREADS LOADING...');
+    airtableAPI.getThreadsForDrop(2)
+        .then(threads => {
+            console.log('✅ THREADS LOADED:', threads.length, 'threads found');
+            if (threads.length > 0) {
+                console.log('  - Sample thread:', threads[0]);
+            } else {
+                console.log('  ⚠️ No threads found for drop 2');
+            }
+        })
+        .catch(error => {
+            console.error('❌ THREADS ERROR:', error);
+        });
+} else {
+    console.log('❌ airtableAPI not found!');
+}
+
+// 7. Check DOM elements
+console.log('7. DOM ELEMENTS CHECK:');
+const elements = [
+    'drop-badge',
+    'submission-count', 
+    'spots-left',
+    'drop-status',
+    'threads-container',
+    'submit-thread-btn'
+];
+
+elements.forEach(id => {
+    const element = document.getElementById(id);
+    console.log(`  - #${id}:`, element ? '✅ Found' : '❌ Missing');
+});
+
+// 8. Check for JavaScript errors
+console.log('8. ERROR MONITORING:');
+window.addEventListener('error', function(e) {
+    console.error('💥 JAVASCRIPT ERROR:', e.error);
+    console.error('  - File:', e.filename);
+    console.error('  - Line:', e.lineno);
+    console.error('  - Message:', e.message);
+});
+
+// 9. Network requests monitoring
+const originalFetch = window.fetch;
+window.fetch = function(...args) {
+    console.log('🌐 NETWORK REQUEST:', args[0]);
+    return originalFetch.apply(this, args)
+        .then(response => {
+            console.log('📡 RESPONSE:', args[0], response.status, response.ok ? 'OK' : 'ERROR');
+            return response;
+        })
+        .catch(error => {
+            console.error('🚫 NETWORK ERROR:', args[0], error);
+            throw error;
+        });
+};
+
+console.log('🔍 === DEBUG SETUP COMPLETE ===');
+console.log('Open browser dev tools and check the console output above');
+console.log('Look for ❌ errors and ⚠️ warnings to identify issues');
+</script>
 </body>
 </html>
